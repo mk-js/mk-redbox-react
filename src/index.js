@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import style from './style.js'
 import ErrorStackParser from 'error-stack-parser'
 import assign from 'object-assign'
-import {isFilenameAbsolute, makeUrl, makeLinkText} from './lib'
+import { isFilenameAbsolute, makeUrl, makeLinkText } from './lib'
 import { mapStackTrace } from 'sourcemapped-stacktrace'
 
 export class RedBoxError extends Component {
@@ -39,9 +39,10 @@ export class RedBoxError extends Component {
       this.mapError(this.props.error)
   }
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.error.stack != this.props.error.stack)
-       this.mapError(nextProps.error)
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.error.stack != this.props.error.stack)
+      this.mapOnConstruction(nextProps.error)
+    //this.mapError(nextProps.error)
   }
 
   // Try to map the error when the component gets constructed, this is possible
@@ -97,9 +98,9 @@ export class RedBoxError extends Component {
     });
   }
 
-  renderFrames (frames) {
-    const {filename, editorScheme, useLines, useColumns} = this.props
-    const {frame, file, linkToFile} = assign({}, style, this.props.style)
+  renderFrames(frames) {
+    const { filename, editorScheme, useLines, useColumns } = this.props
+    const { frame, file, linkToFile } = assign({}, style, this.props.style)
     return frames.map((f, index) => {
       let text
       let url
@@ -125,13 +126,13 @@ export class RedBoxError extends Component {
     })
   }
 
-  render () {
+  render() {
     // The error is received as a property to initialize state.error, which may
     // be updated when it is mapped to the source map.
-    const {error} = this.state
+    const { error } = this.state
 
-    const {className} = this.props
-    const {redbox, message, stack, frame} = assign({}, style, this.props.style)
+    const { className } = this.props
+    const { redbox, message, stack, frame } = assign({}, style, this.props.style)
 
     let frames
     let parseError
@@ -167,23 +168,23 @@ export default class RedBox extends Component {
     error: PropTypes.instanceOf(Error).isRequired
   }
   static displayName = 'RedBox'
-  componentDidMount () {
+  componentDidMount() {
     this.el = document.createElement('div')
     document.body.appendChild(this.el)
     this.renderRedBoxError()
   }
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.renderRedBoxError()
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     ReactDOM.unmountComponentAtNode(this.el)
     document.body.removeChild(this.el)
     this.el = null
   }
-  renderRedBoxError () {
-    ReactDOM.render(<RedBoxError {...this.props}/>, this.el)
+  renderRedBoxError() {
+    ReactDOM.render(<RedBoxError {...this.props} />, this.el)
   }
-  render () {
+  render() {
     return null
   }
 }
