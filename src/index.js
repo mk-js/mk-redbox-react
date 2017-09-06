@@ -39,6 +39,11 @@ export class RedBoxError extends Component {
       this.mapError(this.props.error)
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.error.stack != this.props.error.stack)
+       this.mapError(nextProps.error)
+  }
+
   // Try to map the error when the component gets constructed, this is possible
   // in some cases like evals.
   mapOnConstruction(error) {
